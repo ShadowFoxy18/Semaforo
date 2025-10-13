@@ -834,8 +834,9 @@ MonoBehaviour:
   timeLuces:
   - 10
   - 3
-  - 5
+  - 8
   porcentajeProximidad: 0.5
+  repeticiones: 3
 --- !u!4 &1771744441
 Transform:
   m_ObjectHideFlags: 0
