@@ -33,8 +33,8 @@ public class SemaforoColor : MonoBehaviour
         {
             renderers[i] = luces[i].GetComponent<Renderer>();
             renderers[i].material = colorApagado;
-            timeTotal += Tiempo(timeLuces[i]);
         }
+        ContarTiempo();
     }
 
 
@@ -51,6 +51,12 @@ public class SemaforoColor : MonoBehaviour
     }
 
 
+    float ContarTiempo()
+    {
+        //verde, naranja, rojo, verde
+        timeTotal = 2 * timeLuces[2] + timeLuces[1] + timeLuces[0];
+        return timeTotal;
+    }
 
     
     /// <summary>
@@ -67,21 +73,28 @@ public class SemaforoColor : MonoBehaviour
         renderers[bombilla].material = materiales[luz];
     }
 
+    void SecuenciaLuz(float timeSecuencia)
+    {
+        //verde, narnaja, rojo, verde
+        timeSecuencia -= Time.deltaTime;
+        Debug.Log(timeSecuencia);
+        //verde
+        if ((timeLuces[2] - timeTotal) < timeSecuencia && timeSecuencia < timeTotal) CambiarLuz(2, 3);
 
+        //naranja
+        if ((timeLuces[2] + timeLuces[0])    < timeSecuencia && timeSecuencia < (timeLuces[2] - timeTotal)) CambiarLuz(1, 2);
+
+        //rojo
+        if (timeLuces[2] < timeSecuencia && timeSecuencia < (timeLuces[2] + timeLuces[0])) CambiarLuz(0, 1);
+
+        //verde
+        if (timeSecuencia < timeLuces[2]) CambiarLuz(2, 3);
+    }
 
     
     // Update is called once per frame
     void Update()
     {
-        timeTotal -= Time.deltaTime;
-        Debug.Log(timeTotal);
-        //verde
-        if (10 < timeTotal && timeTotal < 20) CambiarLuz(2, 3);
-        
-        //naranja
-        if (6 < timeTotal && timeTotal < 9) CambiarLuz(1, 2);
-
-        //rojo
-        if (timeTotal < 5) CambiarLuz(0, 1);
+       SecuenciaLuz(timeTotal);
     }
 }
