@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SemaforoColor : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class SemaforoColor : MonoBehaviour
     float[] timeLuces;
 
     float timeTotal;
+    float timeRestante;
 
     //float de una proxiidad a los numeros antes mencionados
     public float porcentajeProximidad = 0.5f;
@@ -34,7 +36,8 @@ public class SemaforoColor : MonoBehaviour
             renderers[i] = luces[i].GetComponent<Renderer>();
             renderers[i].material = colorApagado;
         }
-        ContarTiempo();
+        timeTotal = ContarTiempo();
+        timeRestante = timeTotal;
     }
 
 
@@ -54,8 +57,8 @@ public class SemaforoColor : MonoBehaviour
     float ContarTiempo()
     {
         //verde, naranja, rojo, verde
-        timeTotal = 2 * timeLuces[2] + timeLuces[1] + timeLuces[0];
-        return timeTotal;
+        float time = 2 * timeLuces[2] + timeLuces[1] + timeLuces[0];
+        return time;
     }
 
     
@@ -75,26 +78,27 @@ public class SemaforoColor : MonoBehaviour
 
     void SecuenciaLuz(float timeSecuencia)
     {
-        //verde, narnaja, rojo, verde
-        timeSecuencia -= Time.deltaTime;
-        Debug.Log(timeSecuencia);
-        //verde
-        if ((timeLuces[2] - timeTotal) < timeSecuencia && timeSecuencia < timeTotal) CambiarLuz(2, 3);
+             //verde, narnaja, rojo, verde
 
-        //naranja
-        if ((timeLuces[2] + timeLuces[0])    < timeSecuencia && timeSecuencia < (timeLuces[2] - timeTotal)) CambiarLuz(1, 2);
+            //verde
+            if ((timeLuces[2] - timeTotal) < timeSecuencia && timeSecuencia < timeTotal) CambiarLuz(2, 3);
 
-        //rojo
-        if (timeLuces[2] < timeSecuencia && timeSecuencia < (timeLuces[2] + timeLuces[0])) CambiarLuz(0, 1);
+            //naranja
+            if ((timeLuces[2] + timeLuces[0]) < timeSecuencia && timeSecuencia < (timeLuces[2] - timeTotal)) CambiarLuz(1, 2);
 
-        //verde
-        if (timeSecuencia < timeLuces[2]) CambiarLuz(2, 3);
+            //rojo
+            if (timeLuces[2] < timeSecuencia && timeSecuencia < (timeLuces[2] + timeLuces[0])) CambiarLuz(0, 1);
+
+            //verde
+            if (timeSecuencia < timeLuces[2]) CambiarLuz(2, 3);
     }
 
     
     // Update is called once per frame
     void Update()
     {
-       SecuenciaLuz(timeTotal);
+        timeRestante -= Time.deltaTime;
+        Debug.Log(timeRestante);
+        SecuenciaLuz(timeRestante);
     }
 }
